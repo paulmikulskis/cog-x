@@ -1,0 +1,10 @@
+{
+  "MyFirstWorkflow": {
+    "cron": "* * * * *",
+    "functionName": "exampleFunction",
+    "reqBody": {
+      "miles": 5
+    },
+    "calls": null
+  }
+}
