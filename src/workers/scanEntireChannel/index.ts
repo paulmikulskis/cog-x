@@ -6,7 +6,12 @@ export const scanEntireChannel = async () => {
     "scanEntireChannel",
     async ({ reqBody, _calls }) => {
       const config = reqBody;
-      const response = await ytpurge.post(`/scan/userid`);
+      const response = await ytpurge.post(`/scan/${config.uuid}`, {
+        auth: {
+          username: config.uuid,
+          password: config.password,
+        },
+      });
       //Logic goes here
       try {
       } catch (e) {
