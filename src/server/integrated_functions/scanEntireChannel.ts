@@ -11,7 +11,7 @@ const ScanEntireChannelBody = ScanConfig;
 
 type ScanEntireChannelBodyType = z.TypeOf<typeof ScanEntireChannelBody>;
 
-export const exampleFunc: IntegratedFunction = createIntegratedFunction(
+export const scanEntireChannel: IntegratedFunction = createIntegratedFunction(
   "scanEntireChannel",
   `scan entire channel`,
   ScanConfig,
