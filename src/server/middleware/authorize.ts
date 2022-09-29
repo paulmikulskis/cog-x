@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { respondWith } from "../utils/server_utils";
 import { app } from "firebase-admin/lib/firebase-namespace-api";
+import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 
 const authToken = (firebaseAdmin: app.App) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -26,7 +27,7 @@ const authToken = (firebaseAdmin: app.App) => {
     firebaseAdmin
       .auth()
       .verifyIdToken(token)
-      .then((decodedToken) => {
+      .then((decodedToken: DecodedIdToken) => {
         /* 
          Logic 2 goes here
 
