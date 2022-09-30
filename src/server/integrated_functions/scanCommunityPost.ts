@@ -9,6 +9,7 @@ import { ScanConfig, AuthConfig } from "../utils/scan_config_template";
 
 const ScanCommunityPost = z.object({
   config: ScanConfig.extend({
+    max_comments: z.number(),
     com_post_id: z.string(),
   }),
   auth: AuthConfig,
