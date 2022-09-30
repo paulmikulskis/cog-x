@@ -11,7 +11,7 @@ export const scanCommunityPost = async () => {
         {
           data: {
             settings: {
-              scan_mode: "chosenvideos",
+              scan_mode: "communitypost",
               ...reqBody.config,
             },
           },
