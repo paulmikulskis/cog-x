@@ -8,7 +8,14 @@ export const scanChosenVideos = async () => {
       // We can't get request headers here
       const response = await ytpurge.post(
         `/scan/${reqBody.auth.uuid}`,
-        { data: reqBody.config },
+        {
+          data: {
+            settings: {
+              scan_mode: "chosenvideos",
+              ...reqBody.config,
+            },
+          },
+        },
         {
           auth: {
             username: reqBody.auth.uuid,
