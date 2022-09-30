@@ -7,7 +7,14 @@ export const scanEntireChannel = async () => {
     async ({ reqBody, _calls }) => {
       const response = await ytpurge.post(
         `/scan/${reqBody.auth.uuid}`,
-        { data: reqBody.config },
+        {
+          data: {
+            settings: {
+              scan_mode: "entirechannel",
+              ...reqBody.config,
+            },
+          },
+        },
         {
           auth: {
             username: reqBody.auth.uuid,
