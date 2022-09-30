@@ -1,5 +1,6 @@
 import { exampleFunc } from "./example-func";
 import { scanEntireChannel } from "./scanEntireChannel";
+import { scanCommunityPost } from "./scanCommunityPost";
 
 import { Logger } from "tslog";
 import { exit } from "process";
@@ -12,7 +13,7 @@ export const env = ValidatedEnv.parse(process.env);
   logger.info(`starting worker stack...`);
   config({ path: "base.env" });
   config({ path: ".env", override: true });
-  const integratedWorkers = [exampleFunc, scanEntireChannel];
+  const integratedWorkers = [exampleFunc, scanEntireChannel, scanCommunityPost];
 
   const workers = await Promise.all(integratedWorkers);
   const workerNames = workers.map((w) => w && w.name);

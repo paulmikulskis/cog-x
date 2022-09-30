@@ -5,12 +5,14 @@ import { Logger } from "tslog";
 import { scheduler } from "../integrated_functions/scheduler";
 import { exampleFunc } from "../integrated_functions/exampleFunc";
 import { scanEntireChannel } from "../integrated_functions/scanEntireChannel";
+import { scanCommunityPost } from "../integrated_functions/scanCommunityPost";
 
 const logger = new Logger();
 
 export const integratedFunctions: (IntegratedFunction | IntegratedCalls)[] = [
   exampleFunc,
   scanEntireChannel,
+  scanCommunityPost,
   scheduler,
 ];
 
