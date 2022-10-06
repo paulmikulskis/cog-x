@@ -4,6 +4,7 @@ import { scanCommunityPost } from "./scanCommunityPost";
 import { scanChosenVideos } from "./scanChosenVideos";
 import { scanRecentVideos } from "./scanRecentVideos";
 import { scanCommentList } from "./scanCommentList";
+import { checkYTAuthToken } from "./checkYTAuthToken";
 
 import { Logger } from "tslog";
 import { exit } from "process";
@@ -23,6 +24,7 @@ export const env = ValidatedEnv.parse(process.env);
     scanChosenVideos,
     scanRecentVideos,
     scanCommentList,
+    checkYTAuthToken,
   ];
 
   const workers = await Promise.all(integratedWorkers);

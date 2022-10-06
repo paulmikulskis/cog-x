@@ -9,6 +9,7 @@ import { scanCommunityPost } from "../integrated_functions/scanCommunityPost";
 import { scanChosenVideos } from "../integrated_functions/scanChosenVideos";
 import { scanRecentVideos } from "../integrated_functions/scanRecentVideos";
 import { scanCommentList } from "../integrated_functions/scanCommentList";
+import { checkYTAuthToken } from "../integrated_functions/checkYTAuthToken";
 
 const logger = new Logger();
 
@@ -19,6 +20,7 @@ export const integratedFunctions: (IntegratedFunction | IntegratedCalls)[] = [
   scanChosenVideos,
   scanRecentVideos,
   scanCommentList,
+  checkYTAuthToken,
   scheduler,
 ];
 
