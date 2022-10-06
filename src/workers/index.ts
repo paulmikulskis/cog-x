@@ -3,6 +3,7 @@ import { scanEntireChannel } from "./scanEntireChannel";
 import { scanCommunityPost } from "./scanCommunityPost";
 import { scanChosenVideos } from "./scanChosenVideos";
 import { scanRecentVideos } from "./scanRecentVideos";
+import { scanCommentList } from "./scanCommentList";
 
 import { Logger } from "tslog";
 import { exit } from "process";
@@ -21,6 +22,7 @@ export const env = ValidatedEnv.parse(process.env);
     scanCommunityPost,
     scanChosenVideos,
     scanRecentVideos,
+    scanCommentList,
   ];
 
   const workers = await Promise.all(integratedWorkers);

@@ -8,6 +8,7 @@ import { scanEntireChannel } from "../integrated_functions/scanEntireChannel";
 import { scanCommunityPost } from "../integrated_functions/scanCommunityPost";
 import { scanChosenVideos } from "../integrated_functions/scanChosenVideos";
 import { scanRecentVideos } from "../integrated_functions/scanRecentVideos";
+import { scanCommentList } from "../integrated_functions/scanCommentList";
 
 const logger = new Logger();
 
@@ -17,6 +18,7 @@ export const integratedFunctions: (IntegratedFunction | IntegratedCalls)[] = [
   scanCommunityPost,
   scanChosenVideos,
   scanRecentVideos,
+  scanCommentList,
   scheduler,
 ];
 
