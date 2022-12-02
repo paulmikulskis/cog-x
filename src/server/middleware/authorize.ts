@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express"
 import { respondWith } from "../utils/server_utils"
 import { app } from "firebase-admin/lib/firebase-namespace-api"
-import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier"
+import { getFirestore } from "firebase-admin/firestore"
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const authToken = (firebaseAdmin: app.App) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -16,18 +17,11 @@ const authToken = (firebaseAdmin: app.App) => {
 
       const user = userSnapshot.data()
 
-      if (!firebaseAdmin) return res.send(respondWith(403, `Authentication Server Error`))
-
-      firebaseAdmin
-        .auth()
-        .verifyIdToken(token)
-        .then((decodedToken: DecodedIdToken) => {
-          /* 
-         Logic 2 goes here
-
-          */
-          return next()
-        })
+      if (password === user?.key) {
+        return next()
+      } else {
+        return res.send(respondWith(403, `Invalid password credentials`))
+      }
     } catch {
       return res.send(respondWith(403, `Authentication Server Error`))
     }

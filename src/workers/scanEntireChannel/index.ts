@@ -5,7 +5,14 @@ export const scanEntireChannel = async () => {
   await createIntegratedWorker("scanEntireChannel", async ({ reqBody, _calls }) => {
     const response = await ytpurge.post(
       `/scan/${reqBody.auth.uuid}`,
-      { data: reqBody.config },
+      {
+        data: {
+          settings: {
+            scan_mode: "entirechannel",
+            ...reqBody.config,
+          },
+        },
+      },
       {
         auth: {
           username: reqBody.auth.uuid,
@@ -13,11 +20,15 @@ export const scanEntireChannel = async () => {
         },
       }
     )
-    //Logic goes here
-    console.log(response.data)
-    try {
-    } catch (e) {
-      console.log(`ERROR while trying to request for the api`)
+    if (response.status !== 200) {
+      const msg = `Core API returned [${response.status}] "${
+        response.statusText || response.data
+      }",`
+      console.log(msg)
+    } else {
+      const msg = `successfully scanned entire channel for user "${reqBody.auth.uuid}"`
+      console.log(msg)
     }
+    console.log(`successfully did scanEntireChannel for user "${reqBody.auth.uuid}"`)
   })
 }

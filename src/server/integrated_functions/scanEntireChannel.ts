@@ -5,25 +5,30 @@ import {
   respondWith,
 } from "../utils/server_utils";
 import { getQueue } from "../../workers/utils/queues";
-import { ScanConfig } from "../utils/scan_config_template";
+import { ScanConfig, AuthConfig } from "../utils/scan_config_template";
 
-const ScanEntireChannelBody = ScanConfig;
+const ScanEntireChannelBody = z.object({
+  config: ScanConfig.extend({
+    max_comments: z.number(),
+  }),
+  auth: AuthConfig,
+});
 
 type ScanEntireChannelBodyType = z.TypeOf<typeof ScanEntireChannelBody>;
 
 export const scanEntireChannel: IntegratedFunction = createIntegratedFunction(
   "scanEntireChannel",
   `scan entire channel`,
-  ScanConfig,
+  ScanEntireChannelBody,
   async (context, body) => {
     const dispoDumpQueue = getQueue<ScanEntireChannelBodyType>(
       context.mqConnection,
       "scanEntireChannel"
     );
-    const { ...ScanConfig } = body;
+    const { ...ScanEntireChannelBody } = body;
 
     await dispoDumpQueue.add(`customId.scanEntireChannel`, {
-      reqBody: ScanConfig,
+      reqBody: ScanEntireChannelBody,
       calls: null,
     });
     return respondWith(200, `added job to queue 'scanEntireChannel'`);
