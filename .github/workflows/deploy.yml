@@ -1,5 +1,8 @@
 name: remote ssh command
-on: [push]
+on:
+  push:
+    branches:
+      - master
 jobs:
   Deploy:
     name: Deploy
@@ -11,12 +14,20 @@ jobs:
       
       - name: SSH into ${{ secrets.DEPLOY_HOST }} and "make prod"
         uses: appleboy/ssh-action@master
+        env:
+          DOT_ENV_FILE: ${{ secrets.DOT_ENV_FILE }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEDI_DEPLOY_USERNAME }}
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
+          envs: DOT_ENV_FILE
           script: |
             echo "starting production deploy on $(whoami)@$(hostname) \n\n\n ------------------"
+            echo "stopping current docker compose stack:"
+            cd cog-x && make down && cd ..
+            echo "removing old code and re-cloning repo:"
             rm -rf cog-x && git clone git@github.com-cog:paulmikulskis/cog-x.git
-            cd cog-x && echo ${{ secrets.DOT_ENV_FILE }} > .env && make prod
+            echo "hydrating .env and booting:"
+            cd cog-x && echo "$DOT_ENV_FILE" > .env && make prod
+            echo "healthcheck:"
             curl --connect-timeout 5 "127.0.0.1:15000/"
