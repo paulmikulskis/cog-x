@@ -30,7 +30,7 @@ jobs:
             echo "hydrating .env"
             cd cog-x && echo "$DOT_ENV_FILE" > .env
             echo "running yarn install"
-            yarn install
+            nvm install 16 && nvm use 16 && yarn install
             echo "B00TING!"
             make prod
             echo "healthcheck:"
