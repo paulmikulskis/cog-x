@@ -29,6 +29,8 @@ jobs:
             rm -rf cog-x && git clone git@github.com-cog:paulmikulskis/cog-x.git
             echo "hydrating .env"
             cd cog-x && echo "$DOT_ENV_FILE" > .env
+            echo "running yarn install"
+            yarn install
             echo "B00TING!"
             make prod
             echo "healthcheck:"
