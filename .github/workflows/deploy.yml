@@ -37,5 +37,4 @@ jobs:
             echo "B00TING!"
             make prod
             echo "healthcheck:"
-            curl --connect-timeout 5 "127.0.0.1:15000/"
             return 0
