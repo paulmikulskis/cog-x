@@ -1,0 +1,22 @@
+name: remote ssh command
+on: [push]
+jobs:
+  Deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: checkout repo
+        uses: actions/checkout@v2.3.4
+      
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEDI_DEPLOY_USERNAME }}
+          key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
+          script: |
+            echo "starting production deploy on $(whoami)@$(hostname) \n\n\n ------------------"
+            rm -rf cog-x && git clone git@github.com-cog:paulmikulskis/cog-x.git
+            cd cog-x && make prod
+            curl --connect-timeout 5 "127.0.0.1:15000/"
