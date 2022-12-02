@@ -13,6 +13,9 @@ build:
 up:
 	docker compose up -d --force-recreate && docker compose logs -f
 
+prod:
+	docker compose up -d --force-recreate
+
 down:
 	docker compose down
 
