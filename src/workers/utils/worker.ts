@@ -22,7 +22,10 @@ export interface ExecutionCallLifecycle {
 
 const logger = new Logger()
 
-export const createIntegratedWorker = async (functionName: string, fn: (data: Record<string, any>) => any) => {
+export const createIntegratedWorker = async (
+  functionName: string,
+  fn: (data: Record<string, any>) => any
+) => {
   const calledFunc = integratedFunctions.find((f) => f.name === functionName)
   if (!calledFunc) return undefined
   const mqConnection = await connectToRedisBullmq(env)
@@ -32,7 +35,9 @@ export const createIntegratedWorker = async (functionName: string, fn: (data: Re
     const result = await fn(data)
     logger.info(`'${functionName}' result: ${JSON.stringify(result)}`)
     if (calls) {
-      logger.debug(`found ${Object.keys(calls).length} top-level children of this workflow, starting...`)
+      logger.debug(
+        `found ${Object.keys(calls).length} top-level children of this workflow, starting...`
+      )
       const allCalls = Object.entries(calls)
       for (let i = 0; i < allCalls.length; i++) {
         if (!allCalls[i]) continue
@@ -63,7 +68,13 @@ export const createIntegratedWorker = async (functionName: string, fn: (data: Re
           const argValue = theArgument[1]
           if (!argValue) continue
           const nextArgPod = parsedArguments.entries.length
-          parsedArguments.entries.push({ looped: false, custom: false, name: argName, value: undefined, index: i })
+          parsedArguments.entries.push({
+            looped: false,
+            custom: false,
+            name: argName,
+            value: undefined,
+            index: i,
+          })
           const nextArgEntry = parsedArguments.entries[nextArgPod]
           if (nextArgEntry === undefined) continue
           if (typeof argValue === "string") {
@@ -119,13 +130,18 @@ export const createIntegratedWorker = async (functionName: string, fn: (data: Re
         )
         const enqueueJob = async (bod: QueueTypeInput) => {
           logger.debug(`parsed arguments for reqBody: ${JSON.stringify(assembledBodyStatic)}`)
-          const queue = getQueue<z.TypeOf<typeof nextCalledFunc.schema>>(mqConnection, nextCalledFunc.queueName)
+          const queue = getQueue<z.TypeOf<typeof nextCalledFunc.schema>>(
+            mqConnection,
+            nextCalledFunc.queueName
+          )
           await queue.add(`${workflowName}.calls.${i}`, bod)
-          logger.info(`added chain workflow call '${workflowName}' to queue '${nextCalledFunc.queueName}'`)
+          logger.info(
+            `added chain workflow call '${workflowName}' to queue '${nextCalledFunc.queueName}'`
+          )
           logger.debug(
-            `body added to '${nextCalledFunc.queueName}' queue (callArgs are ${details.callArgs}): ${JSON.stringify(
-              bod
-            )}`
+            `body added to '${nextCalledFunc.queueName}' queue (callArgs are ${
+              details.callArgs
+            }): ${JSON.stringify(bod)}`
           )
         }
         // if we know none of the arguments are looped, we can enqueue one job with this static body

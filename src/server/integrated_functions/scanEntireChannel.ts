@@ -1,20 +1,16 @@
-import { z } from "zod";
-import {
-  createIntegratedFunction,
-  IntegratedFunction,
-  respondWith,
-} from "../utils/server_utils";
-import { getQueue } from "../../workers/utils/queues";
-import { ScanConfig, AuthConfig } from "../utils/scan_config_template";
+import { z } from "zod"
+import { createIntegratedFunction, IntegratedFunction, respondWith } from "../utils/server_utils"
+import { getQueue } from "../../workers/utils/queues"
+import { ScanConfig, AuthConfig } from "../utils/scan_config_template"
 
 const ScanEntireChannelBody = z.object({
   config: ScanConfig.extend({
     max_comments: z.number(),
   }),
   auth: AuthConfig,
-});
+})
 
-type ScanEntireChannelBodyType = z.TypeOf<typeof ScanEntireChannelBody>;
+type ScanEntireChannelBodyType = z.TypeOf<typeof ScanEntireChannelBody>
 
 export const scanEntireChannel: IntegratedFunction = createIntegratedFunction(
   "scanEntireChannel",
@@ -24,13 +20,13 @@ export const scanEntireChannel: IntegratedFunction = createIntegratedFunction(
     const dispoDumpQueue = getQueue<ScanEntireChannelBodyType>(
       context.mqConnection,
       "scanEntireChannel"
-    );
-    const { ...ScanEntireChannelBody } = body;
+    )
+    const { ...ScanEntireChannelBody } = body
 
     await dispoDumpQueue.add(`customId.scanEntireChannel`, {
       reqBody: ScanEntireChannelBody,
       calls: null,
-    });
-    return respondWith(200, `added job to queue 'scanEntireChannel'`);
+    })
+    return respondWith(200, `added job to queue 'scanEntireChannel'`)
   }
-);
+)

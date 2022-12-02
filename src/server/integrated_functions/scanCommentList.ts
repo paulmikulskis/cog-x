@@ -1,34 +1,27 @@
-import { z } from "zod";
-import {
-  createIntegratedFunction,
-  IntegratedFunction,
-  respondWith,
-} from "../utils/server_utils";
-import { getQueue } from "../../workers/utils/queues";
-import { ScanConfig, AuthConfig } from "../utils/scan_config_template";
+import { z } from "zod"
+import { createIntegratedFunction, IntegratedFunction, respondWith } from "../utils/server_utils"
+import { getQueue } from "../../workers/utils/queues"
+import { ScanConfig, AuthConfig } from "../utils/scan_config_template"
 
 const ScanCommentList = z.object({
   config: ScanConfig,
   auth: AuthConfig,
-});
+})
 
-type ScanCommentListType = z.TypeOf<typeof ScanCommentList>;
+type ScanCommentListType = z.TypeOf<typeof ScanCommentList>
 
 export const scanCommentList: IntegratedFunction = createIntegratedFunction(
   "scanCommentList",
   `scanCommentList`,
   ScanCommentList,
   async (context, body) => {
-    const dispoDumpQueue = getQueue<ScanCommentListType>(
-      context.mqConnection,
-      "scanCommentList"
-    );
-    const { ...ScanCommentList } = body;
+    const dispoDumpQueue = getQueue<ScanCommentListType>(context.mqConnection, "scanCommentList")
+    const { ...ScanCommentList } = body
 
     await dispoDumpQueue.add(`customId.scanCommentList`, {
       reqBody: ScanCommentList,
       calls: null,
-    });
-    return respondWith(200, `added job to queue 'scanCommentList'`);
+    })
+    return respondWith(200, `added job to queue 'scanCommentList'`)
   }
-);
+)

@@ -8,7 +8,9 @@ import { isValidCron } from "cron-validator"
 const _functionName = "scheduler"
 type SchedulerBody = z.TypeOf<typeof SchedulerBody>
 export const jobId = (reqBody: SchedulerBody) =>
-  `${reqBody.user ?? "defaultUser"}.${reqBody.workflowName}.${reqBody.functionName}.'${reqBody.cron}'`
+  `${reqBody.user ?? "defaultUser"}.${reqBody.workflowName}.${reqBody.functionName}.'${
+    reqBody.cron
+  }'`
 
 export const scheduler: IntegratedFunction = createIntegratedFunction(
   _functionName,
@@ -38,7 +40,11 @@ export const scheduler: IntegratedFunction = createIntegratedFunction(
     type ReqBodyType = z.TypeOf<typeof fn.schema>
     const foundQueue = getQueue<ReqBodyType>(context.mqConnection, fn.queueName)
 
-    await foundQueue.add(jobId(reqBody), { reqBody: body, calls: calls ?? null }, { repeat: { cron } })
+    await foundQueue.add(
+      jobId(reqBody),
+      { reqBody: body, calls: calls ?? null },
+      { repeat: { cron } }
+    )
     return respondWith(200, `user '${user}' added workflow '${workflowName}'`, {
       workflowName,
       cron,

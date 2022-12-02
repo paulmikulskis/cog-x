@@ -46,6 +46,8 @@ export const initialize = async (context: Context) => {
     const body = { reqBody, calls }
     logger.debug(`adding body to queue: ${JSON.stringify(body)}`)
     await foundQueue.add(jobId(jobIdPayload), body, { repeat: { cron } })
-    logger.info(`successfully scheduled workflow '${workflowName}', function '${functionName}', cron: '${cron}'`)
+    logger.info(
+      `successfully scheduled workflow '${workflowName}', function '${functionName}', cron: '${cron}'`
+    )
   }
 }

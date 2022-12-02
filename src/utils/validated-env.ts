@@ -2,7 +2,8 @@ import { z } from "zod"
 
 // https://github.com/colinhacks/zod/discussions/330#discussioncomment-1625947
 const stringToNumber = () => z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number())
-const stringToBool = () => z.preprocess((a) => (a === "true" || a === "True" ? true : false), z.boolean())
+const stringToBool = () =>
+  z.preprocess((a) => (a === "true" || a === "True" ? true : false), z.boolean())
 
 export const ValidatedEnv = z.object({
   WORKER_COUNT: stringToNumber(),

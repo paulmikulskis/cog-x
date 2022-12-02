@@ -27,7 +27,9 @@ export const uploadToS3 = (data: any, key: string, bucketName = "dutchiedata"): 
     parsedData = undefined
   }
   logger.info(
-    `attempting to upload ${getSizeInBytes(parsedData)} bytes as filename '${key}' to S3 bucket '${bucketName}'`
+    `attempting to upload ${getSizeInBytes(
+      parsedData
+    )} bytes as filename '${key}' to S3 bucket '${bucketName}'`
   )
   const params = {
     Bucket: bucketName,

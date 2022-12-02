@@ -20,7 +20,12 @@ export const jobIdToCron = (jobId: unknown): string => {
   return jobId.split(".")[3] || "UNKNOWN_CRON"
 }
 
-export const repeatJobId = (name: string, nextMillis: number, key: string, jobId?: string): string => {
+export const repeatJobId = (
+  name: string,
+  nextMillis: number,
+  key: string,
+  jobId?: string
+): string => {
   return getRepeatJobId(name, nextMillis, md5(key), jobId)
 }
 

@@ -8,7 +8,10 @@ const logger = new Logger()
 
 EventEmitter.defaultMaxListeners = 20
 
-export const connectToRedis = (env: ValidatedEnv, options: IORedis.RedisOptions): Promise<IORedis.Redis> => {
+export const connectToRedis = (
+  env: ValidatedEnv,
+  options: IORedis.RedisOptions
+): Promise<IORedis.Redis> => {
   const redis = new IORedis({
     port: env.REDIS_PORT,
     host: env.REDIS_HOST,

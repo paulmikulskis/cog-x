@@ -35,7 +35,9 @@ minioClient.listBuckets().then(
           )
           logger.error(`no information will be saved at the MinIO destination...`)
         }
-        logger.info(`Bucket created successfully in 'us-east-1' on host '${MINIO_ENDPOINT}:${MINIO_PORT}'`)
+        logger.info(
+          `Bucket created successfully in 'us-east-1' on host '${MINIO_ENDPOINT}:${MINIO_PORT}'`
+        )
       })
     }
   },
@@ -54,11 +56,15 @@ export const uploadToMinIO = (data: any, key: string, bucketName = "dutchiedata"
   try {
     parsedData = JSON.stringify(data)
   } catch (e) {
-    logger.error(`ERROR: cannot upload file '${key}' to MinIO, data passed is not JSON-serializable!`)
+    logger.error(
+      `ERROR: cannot upload file '${key}' to MinIO, data passed is not JSON-serializable!`
+    )
     return new Promise((_resolve, reject) => reject())
   }
   logger.info(
-    `attempting to upload ${getSizeInBytes(parsedData)} bytes as filename '${key}' to MinIO bucket '${bucketName}'`
+    `attempting to upload ${getSizeInBytes(
+      parsedData
+    )} bytes as filename '${key}' to MinIO bucket '${bucketName}'`
   )
 
   return new Promise((resolve, reject) => {

@@ -5,8 +5,8 @@ const filterModes = [
   "username",
   "nameandtext",
   "id",
-] as const;
+] as const
 
-const removalTypes = ["reportspam", "deletespam", "heldforreview"] as const;
+const removalTypes = ["reportspam", "deletespam", "heldforreview"] as const
 
-export { filterModes, removalTypes };
+export { filterModes, removalTypes }
