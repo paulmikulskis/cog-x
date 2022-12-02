@@ -19,7 +19,11 @@ export const respondWithError = (error: ApiError) => {
   return respondWith(error.code, error.message ?? "", error.data)
 }
 
-export const respondWith = (code: number, message: string, data?: Record<string, unknown>): ApiResponse => {
+export const respondWith = (
+  code: number,
+  message: string,
+  data?: Record<string, unknown>
+): ApiResponse => {
   logger.info(`[${code}] ${message}`)
   return {
     code: code,
@@ -67,7 +71,8 @@ export const createIntegratedFunction = <A>(
   schema,
   fn: (context: Context, body: unknown) => {
     const bodyParse = schema.safeParse(body)
-    if (!bodyParse.success) return Promise.resolve(respondError(401, "invalid POST body input" + bodyParse.error))
+    if (!bodyParse.success)
+      return Promise.resolve(respondError(401, "invalid POST body input" + bodyParse.error))
     return fn(context, bodyParse.data)
   },
   queueName: queueName ?? name,
