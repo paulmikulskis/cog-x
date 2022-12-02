@@ -23,7 +23,7 @@ export const scanEntireChannel: IntegratedFunction = createIntegratedFunction(
     )
     const { ...ScanEntireChannelBody } = body
 
-    await dispoDumpQueue.add(`customId.scanEntireChannel`, {
+    await dispoDumpQueue.add(`${body.auth.uuid}.scanEntireChannel`, {
       reqBody: ScanEntireChannelBody,
       calls: null,
     })

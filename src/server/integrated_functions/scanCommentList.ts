@@ -18,7 +18,7 @@ export const scanCommentList: IntegratedFunction = createIntegratedFunction(
     const dispoDumpQueue = getQueue<ScanCommentListType>(context.mqConnection, "scanCommentList")
     const { ...ScanCommentList } = body
 
-    await dispoDumpQueue.add(`customId.scanCommentList`, {
+    await dispoDumpQueue.add(`${body.auth.uuid}.scanCommentList`, {
       reqBody: ScanCommentList,
       calls: null,
     })

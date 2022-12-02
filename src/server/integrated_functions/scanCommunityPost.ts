@@ -24,7 +24,7 @@ export const scanCommunityPost: IntegratedFunction = createIntegratedFunction(
     )
     const { ...ScanCommunityPost } = body
 
-    await dispoDumpQueue.add(`customId.scanCommunityPost`, {
+    await dispoDumpQueue.add(`${body.auth.uuid}.scanCommunityPost`, {
       reqBody: ScanCommunityPost,
       calls: null,
     })
