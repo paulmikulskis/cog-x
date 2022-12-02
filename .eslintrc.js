@@ -11,7 +11,7 @@ module.exports = {
   },
   plugins: ["@typescript-eslint", "unused-imports"],
   rules: {
-    "prettier/prettier": ["error", { endOfLine: "auto", printWidth: 120, semi: false }],
+    "prettier/prettier": ["error", { endOfLine: "auto", printWidth: 100, semi: false }],
     "@typescript-eslint/semi": ["error", "never"],
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-unused-vars": "off",
