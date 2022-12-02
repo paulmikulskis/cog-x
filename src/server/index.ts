@@ -7,7 +7,16 @@ import { Logger } from "tslog"
 import { getScheduleableFunctions, IntegratedFunction, respondWith } from "./utils/server_utils"
 import { getQueue } from "../workers/utils/queues"
 import { z } from "zod"
-import { jobIdToCron, jobIdToFunctionName, jobIdToUserName, jobIdToWorkflowName, repeatJobId } from "./utils/job_utils"
+import {
+  jobIdToCron,
+  jobIdToFunctionName,
+  jobIdToUserName,
+  jobIdToWorkflowName,
+  repeatJobId,
+} from "./utils/job_utils"
+
+import { authToken } from "./middleware/authorize"
+import initializeFirebase from "./utils/firebase"
 ;(async function () {
   const logger = new Logger()
 
@@ -25,6 +34,11 @@ import { jobIdToCron, jobIdToFunctionName, jobIdToUserName, jobIdToWorkflowName,
   })
 
   app.get("/", (_, res) => res.sendStatus(200))
+
+  //Initialize firebase and Auth middleware
+  const firebaseAdmin = initializeFirebase()
+  if (!firebaseAdmin) return
+  app.use(authToken(firebaseAdmin))
 
   app.post<{ parameter: string }>("/api/:parameter", async (req, res) => {
     const param = req.params.parameter
@@ -63,7 +77,9 @@ import { jobIdToCron, jobIdToFunctionName, jobIdToUserName, jobIdToWorkflowName,
 
   app.get("/api/scheduled-workflows", async (req, res) => {
     const workflowSchedule = await getWorkflowSchedule(req.body?.extendedDetails)
-    return res.send(respondWith(200, `found ${Object.keys(workflowSchedule).length} workflows`, workflowSchedule))
+    return res.send(
+      respondWith(200, `found ${Object.keys(workflowSchedule).length} workflows`, workflowSchedule)
+    )
   })
 
   const getWorkflowSchedule = async (extendedDetails = false) => {
@@ -102,11 +118,18 @@ import { jobIdToCron, jobIdToFunctionName, jobIdToUserName, jobIdToWorkflowName,
               },
             })
           : jobList.push({
-              [workflowName]: { functionName, cron, reqBody: jobDetails?.data.reqBody, calls: jobDetails?.data.calls },
+              [workflowName]: {
+                functionName,
+                cron,
+                reqBody: jobDetails?.data.reqBody,
+                calls: jobDetails?.data.calls,
+              },
             })
       }
       jobs.push(jobList)
     }
-    return Object.fromEntries(jobs.flat().map((e: Record<string, unknown>) => [Object.keys(e)[0], Object.values(e)[0]]))
+    return Object.fromEntries(
+      jobs.flat().map((e: Record<string, unknown>) => [Object.keys(e)[0], Object.values(e)[0]])
+    )
   }
 })()
