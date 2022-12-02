@@ -24,9 +24,9 @@ jobs:
           script: |
             echo "starting production deploy on $(whoami)@$(hostname) \n\n\n ------------------"
             echo "stopping current docker compose stack:"
-            cd cog-x && make down && cd ..
+            cd cog-x && make down && cd ~
             echo "removing old code and re-cloning repo:"
-            sudo rm -rf cog-x && git clone git@github.com-cog:paulmikulskis/cog-x.git
+            rm -rf cog-x && git clone git@github.com-cog:paulmikulskis/cog-x.git
             echo "installing yarn and ts-node":
             npm install -y --global yarn 2> /dev/null 1> /dev/null
             echo "hydrating .env"
