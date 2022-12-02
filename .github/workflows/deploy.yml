@@ -27,12 +27,8 @@ jobs:
             cd cog-x && make down && cd ~
             echo "removing old code and re-cloning repo:"
             rm -rf cog-x && git clone git@github.com-cog:paulmikulskis/cog-x.git
-            echo "installing yarn and ts-node":
-            npm install -y --global yarn 2> /dev/null 1> /dev/null
             echo "hydrating .env"
             cd cog-x && echo "$DOT_ENV_FILE" > .env
-            echo "installing ts-node with yarn"
-            yarn add ts-node
             echo "B00TING!"
             make prod
             echo "healthcheck:"
