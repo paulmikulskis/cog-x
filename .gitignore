@@ -1,4 +1,4 @@
-node_modules
+snode_modules
 .env
 erigon.pem
 dump.rdb
