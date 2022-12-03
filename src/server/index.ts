@@ -1,5 +1,5 @@
 import express from "express"
-import { executeFunction } from "./utils/executeFunction"
+import { executeFunction, integratedFunctions } from "./utils/executeFunction"
 import { config } from "dotenv"
 import { getContext } from "./utils/context"
 import { initialize } from "./utils/initialize"
@@ -7,6 +7,7 @@ import { Logger } from "tslog"
 import { getScheduleableFunctions, IntegratedFunction, respondWith } from "./utils/server_utils"
 import { getQueue } from "../workers/utils/queues"
 import { z } from "zod"
+import zodToJsonSchema from "zod-to-json-schema"
 import {
   jobIdToCron,
   jobIdToFunctionName,
@@ -82,6 +83,13 @@ import initializeFirebase from "./utils/firebase"
     )
   })
 
+  app.get("/api/integrated-functions", async (req, res) => {
+    const functions = getIntegratedFunctions()
+    return res.send(
+      respondWith(200, `found ${Object.keys(functions).length} integrated functions`, { functions })
+    )
+  })
+
   const getWorkflowSchedule = async (extendedDetails = false) => {
     const jobs = []
     const funcs = getScheduleableFunctions()
@@ -131,5 +139,16 @@ import initializeFirebase from "./utils/firebase"
     return Object.fromEntries(
       jobs.flat().map((e: Record<string, unknown>) => [Object.keys(e)[0], Object.values(e)[0]])
     )
+  }
+
+  const getIntegratedFunctions = () => {
+    return integratedFunctions.map((fn) => {
+      return {
+        functionName: fn.name,
+        description: fn.description,
+        scheduleable: fn.scheduleable,
+        schema: zodToJsonSchema(fn.schema),
+      }
+    })
   }
 })()
