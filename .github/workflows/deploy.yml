@@ -22,9 +22,6 @@ jobs:
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
           envs: DOT_ENV_FILE
           script: |
-            echo "starting production deploy on $(whoami)@$(hostname) \n\n\n ------------------"
-            echo "stopping current docker compose stack:"
-            cd cog-x && make down && cd ~
             echo "removing old code and re-cloning repo:"
             rm -rf cog-x && git clone git@github.com-cog:paulmikulskis/cog-x.git
             echo "hydrating .env"
@@ -36,5 +33,3 @@ jobs:
             nvm install 16 && nvm use 16 && yarn install
             echo "B00TING!"
             make prod
-            echo "healthcheck:"
-            return 0
