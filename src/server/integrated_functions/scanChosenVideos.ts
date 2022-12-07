@@ -17,7 +17,10 @@ export const scanChosenVideos: IntegratedFunction = createIntegratedFunction(
   `scanChosenVideos`,
   ScanChosenVideos,
   async (context, body) => {
-    const dispoDumpQueue = getQueue<ScanChosenVideosType>(context.mqConnection, "scanChosenVideos")
+    const dispoDumpQueue = await getQueue<ScanChosenVideosType>(
+      context.mqConnection,
+      "scanChosenVideos"
+    )
     const { ...ScanChosenVideos } = body
 
     await dispoDumpQueue.add(`${body.auth.uuid}.scanChosenVideos`, {

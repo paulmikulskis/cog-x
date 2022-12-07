@@ -130,7 +130,7 @@ export const createIntegratedWorker = async (
         )
         const enqueueJob = async (bod: QueueTypeInput) => {
           logger.debug(`parsed arguments for reqBody: ${JSON.stringify(assembledBodyStatic)}`)
-          const queue = getQueue<z.TypeOf<typeof nextCalledFunc.schema>>(
+          const queue = await getQueue<z.TypeOf<typeof nextCalledFunc.schema>>(
             mqConnection,
             nextCalledFunc.queueName
           )

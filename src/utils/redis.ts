@@ -1,4 +1,4 @@
-import IORedis from "ioredis"
+import Redis from "ioredis"
 
 // https://github.com/OptimalBits/bull/issues/503
 // import EventEmitter from "events"
@@ -10,15 +10,19 @@ const logger = new Logger()
 
 export const connectToRedis = (
   env: ValidatedEnv,
-  options: IORedis.RedisOptions
-): Promise<IORedis.Redis> => {
-  const redis = env.REDIS_FQDN
-    ? new IORedis(env.REDIS_FQDN, options)
-    : new IORedis({
-        port: env.REDIS_PORT,
-        host: env.REDIS_HOST,
-        ...options,
-      })
+  options: Redis.RedisOptions
+): Promise<Redis.Redis> => {
+  env.REDIS_FQDN.length > 1
+    ? logger.info(`connecting to redis with TLS on ${env.REDIS_FQDN}`)
+    : logger.info(` connecting to redis (no-tls) at ${env.REDIS_HOST}:${env.REDIS_PORT}`)
+  const redis =
+    env.REDIS_FQDN.length > 1
+      ? new Redis(env.REDIS_FQDN)
+      : new Redis({
+          port: env.REDIS_PORT,
+          host: env.REDIS_HOST,
+          ...options,
+        })
   return new Promise((resolve, reject) => {
     redis.on("connect", () => {
       logger.info("redis successfully connected")
@@ -31,5 +35,5 @@ export const connectToRedis = (
   })
 }
 
-export const connectToRedisBullmq = (env: ValidatedEnv): Promise<IORedis.Redis> =>
+export const connectToRedisBullmq = async (env: ValidatedEnv): Promise<Redis.Redis> =>
   connectToRedis(env, { maxRetriesPerRequest: null, enableReadyCheck: false })

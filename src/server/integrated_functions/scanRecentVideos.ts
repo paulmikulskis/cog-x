@@ -17,7 +17,7 @@ export const scanRecentVideos: IntegratedFunction = createIntegratedFunction(
   `scanRecentVideos`,
   ScanRecentVideos,
   async (context, body) => {
-    const recentVideosQueue = getQueue<ScanRecentVideosType>(
+    const recentVideosQueue = await getQueue<ScanRecentVideosType>(
       context.mqConnection,
       "scanRecentVideos"
     )

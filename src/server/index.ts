@@ -4,8 +4,8 @@ import { config } from "dotenv"
 import { getContext } from "./utils/context"
 import { initialize } from "./utils/initialize"
 import { Logger } from "tslog"
-import { getScheduleableFunctions, IntegratedFunction, respondWith } from "./utils/server_utils"
-import { getQueue } from "../workers/utils/queues"
+import { getScheduleableFunctions, respondWith } from "./utils/server_utils"
+import { getQueue, QueueType } from "../workers/utils/queues"
 import { z } from "zod"
 import zodToJsonSchema from "zod-to-json-schema"
 import {
@@ -18,6 +18,7 @@ import {
 
 import { authToken } from "./middleware/authorize"
 import initializeFirebase from "./utils/firebase"
+import { Queue } from "bullmq"
 ;(async function () {
   const logger = new Logger()
 
@@ -64,7 +65,7 @@ import initializeFirebase from "./utils/firebase"
       logger.warn(msg)
       return res.send(msg)
     }
-    const queue = getQueue(context.mqConnection, job["queueName"] || "default")
+    const queue = await getQueue(context.mqConnection, job["queueName"] || "default")
     queue.removeRepeatableByKey(job["key"])
     const workflow = {
       workflowName,
@@ -93,10 +94,12 @@ import initializeFirebase from "./utils/firebase"
   const getWorkflowSchedule = async (extendedDetails = false) => {
     const jobs = []
     const funcs = getScheduleableFunctions()
-    const queues = funcs.map((fn: IntegratedFunction) => {
+    const queues: Queue<QueueType<any>, unknown, string>[] = []
+    for (let i = 0; i < funcs.length; i++) {
+      const fn = funcs[i]
       type ReqBody = z.TypeOf<typeof fn.schema>
-      return getQueue<ReqBody>(context.mqConnection, fn.queueName)
-    })
+      queues.push(await getQueue<ReqBody>(context.mqConnection, fn.queueName))
+    }
     for (let i = 0; i < queues.length; i++) {
       const queue = queues[i]
       const fn = funcs[i]

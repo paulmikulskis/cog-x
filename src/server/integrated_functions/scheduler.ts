@@ -38,7 +38,7 @@ export const scheduler: IntegratedFunction = createIntegratedFunction(
       )
     }
     type ReqBodyType = z.TypeOf<typeof fn.schema>
-    const foundQueue = getQueue<ReqBodyType>(context.mqConnection, fn.queueName)
+    const foundQueue = await getQueue<ReqBodyType>(context.mqConnection, fn.queueName)
 
     await foundQueue.add(
       jobId(reqBody),

@@ -17,7 +17,7 @@ export const scanEntireChannel: IntegratedFunction = createIntegratedFunction(
   `scan entire channel`,
   ScanEntireChannelBody,
   async (context, body) => {
-    const dispoDumpQueue = getQueue<ScanEntireChannelBodyType>(
+    const dispoDumpQueue = await getQueue<ScanEntireChannelBodyType>(
       context.mqConnection,
       "scanEntireChannel"
     )

@@ -15,7 +15,10 @@ export const checkYTAuthToken: IntegratedFunction = createIntegratedFunction(
   `checkYTAuthToken`,
   CheckYTAuthToken,
   async (context, body) => {
-    const dispoDumpQueue = getQueue<CheckYTAuthToken>(context.mqConnection, "checkYTAuthToken")
+    const dispoDumpQueue = await getQueue<CheckYTAuthToken>(
+      context.mqConnection,
+      "checkYTAuthToken"
+    )
     const { ...CheckYTAuthToken } = body
 
     await dispoDumpQueue.add(`${body.auth.uuid}.checkYTAuthToken`, {

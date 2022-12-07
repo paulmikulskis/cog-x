@@ -21,7 +21,10 @@ export const exampleFunc: IntegratedFunction = createIntegratedFunction(
   async (context, body) => {
     // Actual functionality to perform if called upon
     // The context and body get auto-exposed, to provide connection and global vars
-    const dispoDumpQueue = getQueue<StoreInfoDumpBodyType>(context.mqConnection, "exampleFunc")
+    const dispoDumpQueue = await getQueue<StoreInfoDumpBodyType>(
+      context.mqConnection,
+      "exampleFunc"
+    )
     const { miles } = body // we can expect a field 'miles'
     // queue a job in this queue for our new Worker to pick up:
     await dispoDumpQueue.add(`customId.${miles}`, { reqBody: { miles }, calls: null })

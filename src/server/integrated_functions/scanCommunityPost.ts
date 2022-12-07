@@ -18,7 +18,7 @@ export const scanCommunityPost: IntegratedFunction = createIntegratedFunction(
   `scanCommunityPost`,
   ScanCommunityPost,
   async (context, body) => {
-    const dispoDumpQueue = getQueue<ScanCommunityPostType>(
+    const dispoDumpQueue = await getQueue<ScanCommunityPostType>(
       context.mqConnection,
       "scanCommunityPost"
     )

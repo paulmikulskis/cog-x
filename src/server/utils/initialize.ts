@@ -14,7 +14,7 @@ export const initialize = async (context: Context) => {
   if (context.env.ENVIRONMENT !== "development") {
     console.log(`in development mode`)
   }
-  initCogCoreQueues(context.env)
+  await initCogCoreQueues(context.env)
   const sch = Object.entries(schedule)
   for (let i = 0; i < sch.length; i++) {
     const entry = sch[i]
@@ -35,7 +35,7 @@ export const initialize = async (context: Context) => {
       continue
     }
     type ReqBodyType = z.TypeOf<typeof fn.schema>
-    const foundQueue = getQueue<ReqBodyType>(context.mqConnection, fn.queueName)
+    const foundQueue = await getQueue<ReqBodyType>(context.mqConnection, fn.queueName)
     const jobIdPayload = {
       workflowName,
       user,

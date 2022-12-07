@@ -3,13 +3,10 @@ import type { Redis } from "ioredis"
 import { ValidatedEnv } from "../../utils/validated-env"
 import { integratedFunctions } from "../../server/utils/executeFunction"
 import { Logger } from "tslog"
-import { IntegratedFunction } from "../../server/utils/server_utils"
+// import { IntegratedFunction } from "../../server/utils/server_utils"
+import { connectToRedisBullmq } from "../../utils/redis"
+import { env } from ".."
 const logger = new Logger()
-
-const connection = (env: ValidatedEnv) => ({
-  host: env.REDIS_HOST,
-  port: env.REDIS_PORT,
-})
 
 export type QueueType<B> = {
   reqBody: B
@@ -21,15 +18,15 @@ export type QueueTypeInput = {
   calls: Record<string, any> | null
 }
 
-export const getQueue = <A>(
+export const getQueue = async <A>(
   redis: Redis,
   queueName: string,
   defaultJobOptions?: BaseJobOptions
-): Queue<QueueType<A>, unknown, string> => {
+): Promise<Queue<QueueType<A>, unknown, string>> => {
   const attempts = 1
   logger.info(`connecting to queue ${queueName}, QueueConfig: attempts=${attempts}`)
   return new Queue<QueueType<A>>(queueName, {
-    connection: redis,
+    connection: await connectToRedisBullmq(env),
     defaultJobOptions: defaultJobOptions ?? {
       attempts: attempts,
       backoff: { type: "exponential", delay: 3000 },
@@ -39,8 +36,15 @@ export const getQueue = <A>(
   })
 }
 
-export const initCogCoreQueues = (env: ValidatedEnv): QueueScheduler[] => {
-  return integratedFunctions.map((fun: IntegratedFunction) => {
-    return new QueueScheduler(fun.queueName, { connection: connection(env) })
-  })
+export const initCogCoreQueues = async (env: ValidatedEnv): Promise<QueueScheduler[]> => {
+  const schedulers: QueueScheduler[] = []
+  for (let i = 0; i < integratedFunctions.length; i++) {
+    const regisConnectionm = await connectToRedisBullmq(env)
+    schedulers.push(
+      new QueueScheduler(integratedFunctions[i].queueName, {
+        connection: regisConnectionm,
+      })
+    )
+  }
+  return schedulers
 }
