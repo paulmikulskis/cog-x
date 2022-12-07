@@ -10,15 +10,11 @@ volumes:
 services:
   api:
     image: registry.yungstentech.com/cog-x:latest
-    user: root
     command: "yarn start:api"
     ports:
       - "15000:15000"
     expose:
       - 15000
-    volumes:
-      - .:/apps
-      - /apps/api/node_modules
     depends_on:
       - redis
     links:
@@ -29,9 +25,6 @@ services:
       - ENVIRONMENT=production
   workers:
     image: registry.yungstentech.com/cog-x:latest
-    user: root
-    volumes:
-      - .:/apps
     command: "yarn start:all"
     depends_on:
       - redis

@@ -4,9 +4,9 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start:api": "npx ts-node --transpile-only src/server/index.ts",
-    "start:menuDumper": "npx ts-node --transpile-only src/workers/index.ts menuDumper",
-    "start:all": "npx ts-node --transpile-only src/workers/index.ts",
+    "start:api": "yarn ts-node --transpile-only src/server/index.ts",
+    "start:menuDumper": "yarn ts-node --transpile-only src/workers/index.ts menuDumper",
+    "start:all": "yarn ts-node --transpile-only src/workers/index.ts",
     "current-version": "node -e \"console.log(require('./package.json').version);\""
   },
   "dependencies": {
@@ -26,7 +26,6 @@
     "graphql-request": "^5.0.0",
     "minio": "^7.0.32",
     "node-fetch": "2",
-    "npx": "^10.2.2",
     "redis": "^4.3.1",
     "ts-node": "^10.9.1",
     "tslog": "^3.3.3",
