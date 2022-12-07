@@ -9,7 +9,7 @@ volumes:
     driver: local
 services:
   api:
-    image: registry.yungstentech.com/cog-x
+    image: registry.yungstentech.com/cog-x:latest
     user: root
     command: "yarn start:api"
     ports:
@@ -28,7 +28,7 @@ services:
     environment:
       - ENVIRONMENT=production
   workers:
-    image: registry.yungstentech.com/cog-x
+    image: registry.yungstentech.com/cog-x:latest
     user: root
     volumes:
       - .:/apps
