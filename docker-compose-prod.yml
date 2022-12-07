@@ -9,16 +9,12 @@ volumes:
     driver: local
 services:
   api:
-    build: .
-    user: root
+    image: registry.yungstentech.com/cog-x:latest
     command: "yarn start:api"
     ports:
       - "15000:15000"
     expose:
       - 15000
-    volumes:
-      - .:/apps
-      - /apps/api/node_modules
     depends_on:
       - redis
     links:
@@ -26,12 +22,9 @@ services:
     env_file:
       - .env
     environment:
-      - ENVIRONMENT=development
+      - ENVIRONMENT=production
   workers:
-    build: .
-    user: root
-    volumes:
-      - .:/apps
+    image: registry.yungstentech.com/cog-x:latest
     command: "yarn start:all"
     depends_on:
       - redis
@@ -40,7 +33,7 @@ services:
     env_file:
       - .env
     environment:
-      - ENVIRONMENT=development
+      - ENVIRONMENT=production
 
   redis:
     image: redis:6.2.3-alpine
