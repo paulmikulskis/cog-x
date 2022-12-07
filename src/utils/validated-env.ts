@@ -12,6 +12,7 @@ export const ValidatedEnv = z.object({
   API_PORT: stringToNumber(),
   REDIS_HOST: z.string().min(1),
   REDIS_PORT: stringToNumber(),
+  REDIS_FQDN: z.string(),
   IAM_USER_KEY: z.string().min(1),
   IAM_USER_SECRET: z.string().min(1),
   DUTCHIE_GRAPHQL_URL: z.string().default("https://dutchie.com/graphql"),
