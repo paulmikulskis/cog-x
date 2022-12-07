@@ -9,5 +9,4 @@ COPY yarn.lock ./
 RUN yarn install
 
 COPY ./src .
-COPY ./views/ ./
 
