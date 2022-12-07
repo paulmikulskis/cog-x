@@ -1,6 +1,7 @@
 snode_modules
 node_modules
 .env
+prod.env
 erigon.pem
 dump.rdb
 src/*.js
