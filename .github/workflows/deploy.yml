@@ -31,4 +31,4 @@ jobs:
             rm -rf cog-x && git clone git@github.com-cog:paulmikulskis/cog-x.git
             echo "hydrating .env"
             cd cog-x && echo "$DOT_ENV_FILE" > .env
-            docker compose up -d -f docker-compose-prod.yml --force-recreate
+            docker compose -f docker-compose-prod.yml up -d --force-recreate
