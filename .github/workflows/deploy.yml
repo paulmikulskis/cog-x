@@ -1,17 +1,24 @@
-name: remote ssh command
+name: production deploy of cog
 on:
   push:
     branches:
       - master
 jobs:
   Deploy:
-    name: Deploy
+    name: Production Deploy
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
         uses: actions/checkout@v2.3.4
       
-      - name: SSH into dedicated host and "make prod"
+      - name: Build and push to registry.yungstentech.com
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: registry.yungstentech.com/cog-x:latest
+
+      - name: SSH into dedicated host docker run
         uses: appleboy/ssh-action@master
         env:
           DOT_ENV_FILE: ${{ secrets.DOT_ENV_FILE }}
@@ -21,14 +28,4 @@ jobs:
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
           envs: DOT_ENV_FILE
           script: |
-            echo "removing old code and re-cloning repo:"
-            rm -rf cog-x && git clone git@github.com-cog:paulmikulskis/cog-x.git
-            echo "hydrating .env"
-            cd cog-x && echo "$DOT_ENV_FILE" > .env
-            echo "running yarn install"
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-            nvm install 16 && nvm use 16 && yarn install
-            echo "B00TING!"
-            make prod
+            docker compose up -d --force-recreate
