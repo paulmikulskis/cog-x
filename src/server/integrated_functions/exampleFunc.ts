@@ -6,12 +6,12 @@ import { getQueue } from "../../workers/utils/queues"
 // We define that structure with Zod.  If this IntegratedFunction is the interface for
 // a callable Worker (as we just wrote above), this also defines the reqBody form
 // for routing/type-checking/control-flow within the Worker stack:
-const StoreInfoDumpBody = z.object({
+export const StoreInfoDumpBody = z.object({
   miles: z.number(),
 })
 
 // we need to convert that 👆 model into a Type so we can grab the Queue functionality
-type StoreInfoDumpBodyType = z.TypeOf<typeof StoreInfoDumpBody>
+export type StoreInfoDumpBodyType = z.TypeOf<typeof StoreInfoDumpBody>
 
 // call the createIntegratedFunction() method to bootstrap your API route:
 export const exampleFunc: IntegratedFunction = createIntegratedFunction(
@@ -27,8 +27,10 @@ export const exampleFunc: IntegratedFunction = createIntegratedFunction(
     )
     const { miles } = body // we can expect a field 'miles'
     // queue a job in this queue for our new Worker to pick up:
-    await dispoDumpQueue.add(`customId.${miles}`, { reqBody: { miles }, calls: null })
+    const job = await dispoDumpQueue.add(`customId.${miles}`, { reqBody: { miles }, calls: null })
     // since an IntegratedFunction is ultimately a route, make sure to respond HTTP:
-    return respondWith(200, `added job to queue 'exampleFunc' for shops within '${miles}' miles`)
+    return respondWith(200, `added job to queue 'exampleFunc' for shops within '${miles}' miles`, {
+      job,
+    })
   }
 )

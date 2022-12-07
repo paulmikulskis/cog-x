@@ -21,10 +21,10 @@ export const checkYTAuthToken: IntegratedFunction = createIntegratedFunction(
     )
     const { ...CheckYTAuthToken } = body
 
-    await dispoDumpQueue.add(`${body.auth.uuid}.checkYTAuthToken`, {
+    const job = await dispoDumpQueue.add(`${body.auth.uuid}.checkYTAuthToken`, {
       reqBody: CheckYTAuthToken,
       calls: null,
     })
-    return respondWith(200, `added job to queue 'checkYTAuthToken'`)
+    return respondWith(200, `added job to queue 'checkYTAuthToken'`, { job })
   }
 )

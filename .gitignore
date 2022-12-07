@@ -5,3 +5,4 @@ prod.env
 erigon.pem
 dump.rdb
 src/*.js
+exampleFunc.json
