@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<body class="container">
+
+<header>
+  <%- include('../partials/header'); %>
+</header>
+
+<main>
+  <div class="jumbotron">
+    <h1>Cog is up!</h1>
+    <ul>
+      <% Object.entries(status).forEach((datum) => { %>
+        <li>
+          <strong><%= datum[0] %>:</strong>
+           <%= typeof(datum[1]) ==="string" ? datum[1] : JSON.stringify(datum[1], null, 2)%>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <%- include('../partials/footer'); %>
+</footer>
+
+</body>
+</html>

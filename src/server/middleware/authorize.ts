@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express"
 import { respondWith } from "../utils/server_utils"
 import { app } from "firebase-admin/lib/firebase-namespace-api"
 import { getFirestore } from "firebase-admin/firestore"
+import { validatedEnv } from "../../utils/validated-env"
 
 // eslint-disable-next-line unused-imports/no-unused-vars
 const authToken = (firebaseAdmin: app.App) => {
@@ -9,6 +10,17 @@ const authToken = (firebaseAdmin: app.App) => {
     try {
       const db = getFirestore()
       const auth = req.headers.authorization
+      if (!auth || auth.length == 0) {
+        return res.send(respondWith(403, `no authentication credentials found`))
+      }
+      if (auth.split(" ").length < 2) {
+        if (validatedEnv.KEYS.split(",").includes(auth)) {
+          return next()
+        } else {
+          return res.send(respondWith(403, `key '${auth}' not valid`))
+        }
+      }
+
       if (!auth) {
         return res.send(respondWith(403, `Basic HTTP auth info not found`))
       }

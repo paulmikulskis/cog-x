@@ -15,10 +15,10 @@ import {
   jobIdToWorkflowName,
   repeatJobId,
 } from "./utils/job_utils"
-
 import { authToken } from "./middleware/authorize"
 import initializeFirebase from "./utils/firebase"
 import { Queue } from "bullmq"
+import { connectToRedis } from "../utils/redis"
 ;(async function () {
   const logger = new Logger()
 
@@ -26,18 +26,32 @@ import { Queue } from "bullmq"
   config({ path: ".env", override: true })
 
   const app = express()
-  app.use(express.json())
+  //app.use(express.json())
+  app.set("view engine", "ejs")
+  // app.use(express.static(path.join(__dirname, "public")))
+  // app.use("/css", express.static(path.join(__dirname, "node_modules/bootstrap/dist/css")))
 
   const context = await getContext(process.env)
   await initialize(context)
 
-  app.listen(context.env.API_PORT, () => {
-    logger.info(`cog-core-api listening on port ${context.env.API_PORT}`)
+  app.get("/", async (_, res) => {
+    const redisConnection = await connectToRedis(context.env, {})
+    const status = {
+      host: context.env.API_HOST,
+      numberOfIntegratedFunctions: getIntegratedFunctions().length,
+      numberOfScheduledWorkflows: Object.keys(getWorkflowSchedule()).length,
+      redis: {
+        host: redisConnection.options.host,
+        port: redisConnection.options.port,
+        tls: redisConnection.options.sentinelTLS !== undefined,
+      },
+    }
+    // res.send(respondWith(200, `OK - cog is up!`, { status }))
+    res.render("pages/index", { status })
   })
 
-  app.get("/", (_, res) => res.sendStatus(200))
-
   //Initialize firebase and Auth middleware
+  // any routes below here will be secured with the auth middleware
   const firebaseAdmin = initializeFirebase()
   if (!firebaseAdmin) return
   app.use(authToken(firebaseAdmin))
@@ -154,4 +168,7 @@ import { Queue } from "bullmq"
       }
     })
   }
+  app.listen(context.env.API_PORT, () => {
+    logger.info(`cog-core-api listening on port ${context.env.API_PORT}`)
+  })
 })()

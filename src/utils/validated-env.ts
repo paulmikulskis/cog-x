@@ -1,4 +1,8 @@
 import { z } from "zod"
+import { config } from "dotenv"
+
+config({ path: "base.env" })
+config({ path: ".env", override: true })
 
 // https://github.com/colinhacks/zod/discussions/330#discussioncomment-1625947
 const stringToNumber = () => z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number())
@@ -6,10 +10,12 @@ const stringToBool = () =>
   z.preprocess((a) => (a === "true" || a === "True" ? true : false), z.boolean())
 
 export const ValidatedEnv = z.object({
+  API_HOST: z.string().default("http://127.0.0.1"),
+  API_PORT: stringToNumber(),
+  KEYS: z.string().default(""),
   WORKER_COUNT: stringToNumber(),
   WORKER_CONCURRENCY: stringToNumber(),
   ENVIRONMENT: z.union([z.literal("development"), z.literal("production")]),
-  API_PORT: stringToNumber(),
   REDIS_HOST: z.string().min(1),
   REDIS_PORT: stringToNumber(),
   REDIS_FQDN: z.string(),
@@ -25,3 +31,4 @@ export const ValidatedEnv = z.object({
   UPLOAD_S3: stringToBool().default(false),
 })
 export type ValidatedEnv = z.TypeOf<typeof ValidatedEnv>
+export const validatedEnv = ValidatedEnv.parse(process.env)
