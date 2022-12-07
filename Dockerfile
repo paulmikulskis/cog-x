@@ -1,4 +1,4 @@
-FROM frapsoft/ts-node:yarn
+FROM node:16.16.0-alpine
 
 ARG VERSION_TAG
 

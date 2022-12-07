@@ -72,7 +72,7 @@ export const createIntegratedFunction = <A>(
   fn: (context: Context, body: unknown) => {
     const bodyParse = schema.safeParse(body)
     if (!bodyParse.success)
-      return Promise.resolve(respondError(401, "invalid POST body input" + bodyParse.error))
+      return Promise.resolve(respondError(401, "invalid POST body input, not parsable"))
     return fn(context, bodyParse.data)
   },
   queueName: queueName ?? name,

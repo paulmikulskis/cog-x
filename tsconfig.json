@@ -13,7 +13,7 @@
       "node", "jest"
     ],
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "noEmit": true,
     "noUncheckedIndexedAccess": true,
   },
