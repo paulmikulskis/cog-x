@@ -1,9 +1,9 @@
 {
-  "MyFirstWorkflow": {
+  "Healthcheck Workflow": {
     "cron": "* * * * *",
-    "functionName": "exampleFunction",
+    "functionName": "healthcheck",
     "reqBody": {
-      "miles": 5
+      "endpoint": "https://healthchecks.yungstentech.com/ping/c0ca6da6-c0e4-48c4-a711-4386213ac0f9"
     },
     "calls": null
   }

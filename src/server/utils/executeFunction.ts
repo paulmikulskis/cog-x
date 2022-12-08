@@ -10,6 +10,7 @@ import { scanChosenVideos } from "../integrated_functions/scanChosenVideos"
 import { scanRecentVideos } from "../integrated_functions/scanRecentVideos"
 import { scanCommentList } from "../integrated_functions/scanCommentList"
 import { checkYTAuthToken } from "../integrated_functions/checkYTAuthToken"
+import { healthcheck } from "../integrated_functions/healthcheck"
 
 const logger = new Logger()
 
@@ -22,6 +23,7 @@ export const integratedFunctions: (IntegratedFunction | IntegratedCalls)[] = [
   scanCommentList,
   checkYTAuthToken,
   scheduler,
+  healthcheck,
 ]
 
 export const executeFunction = (context: Context, functionName: string, rawBody: unknown) => {
