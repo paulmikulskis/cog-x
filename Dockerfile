@@ -8,7 +8,7 @@ COPY package.json ./
 COPY yarn.lock ./
 RUN yarn install
 
-COPY ./src .
+COPY ./src ./src
 COPY ./views ./views
 RUN ls
 
