@@ -1,4 +1,4 @@
-.PHONY: serve reset docker up down aws clean build up api worker ssh
+.PHONY: serve reset docker up down aws clean build up api worker ssh prodmock
 
 
 aws:
@@ -10,9 +10,11 @@ clean:
 build:
 	docker build --no-cache .
 
+prodmock:
+	docker image rm --force cog-x:latest && docker compose -f docker-compose-prod-mock.yml up -d --force-recreate
+
 up:
 	docker compose up -d --force-recreate && docker compose logs -f
-
 prod:
 	docker compose up -d --force-recreate
 

@@ -10,5 +10,6 @@ RUN yarn install
 
 COPY ./src ./src
 COPY ./views ./views
+COPY ./tsconfig.json ./tsconfig.json
 RUN ls
 
