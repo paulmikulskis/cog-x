@@ -17,8 +17,8 @@ const query = gql`
   }
 `;
 
-export const exampleFunc = async () => {
-  await createIntegratedWorker(
+export const exampleFunc = () => {
+  return createIntegratedWorker(
     "exampleFunc", // name of integratedWorker (used for info like `queueName`)
 
     // core function that defines this worker:

@@ -1,8 +1,8 @@
 import { createIntegratedWorker } from "../utils/worker";
 import axios from "axios";
 
-export const healthcheck = async () => {
-  await createIntegratedWorker("healthcheck", async ({ reqBody, _calls }) => {
+export const healthcheck = () => {
+  return createIntegratedWorker("healthcheck", async ({ reqBody, _calls }) => {
     // We can't get request headers here
     const endpoint = reqBody.endpoint;
     const response = await axios.get(endpoint);

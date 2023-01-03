@@ -1,8 +1,8 @@
 import { createIntegratedWorker } from "../utils/worker";
 import ytpurge from "../../server/utils/ytpurgeapi";
 
-export const scanCommunityPost = async () => {
-  await createIntegratedWorker(
+export const scanCommunityPost = () => {
+  return createIntegratedWorker(
     "scanCommunityPost",
     async ({ reqBody, _calls }) => {
       // We can't get request headers here

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Worker } from "bullmq";
 import { range } from "lodash";
 import { integratedFunctions } from "../../server/utils/executeFunction";
@@ -22,13 +24,12 @@ export interface ExecutionCallLifecycle {
 
 const logger = new Logger();
 
-export const createIntegratedWorker = async (
+export const createIntegratedWorker = (
   functionName: string,
   fn: (data: Record<string, any>) => any
 ) => {
   const calledFunc = integratedFunctions.find((f) => f.name === functionName);
   if (!calledFunc) return undefined;
-  const mqConnection = await connectToRedisBullmq(env);
   const func = async ({ data }: any) => {
     const calls = data.calls;
     logger.debug(`calling function '${functionName}'`);
@@ -141,6 +142,10 @@ export const createIntegratedWorker = async (
               assembledBodyStatic
             )}`
           );
+          logger.debug(
+            `connecting to redis to queue up this child call to ${nextCalledFunc.queueName}`
+          );
+          const mqConnection = await connectToRedisBullmq(env);
           const queue = await getQueue<z.TypeOf<typeof nextCalledFunc.schema>>(
             mqConnection,
             nextCalledFunc.queueName
@@ -153,6 +158,10 @@ export const createIntegratedWorker = async (
             `body added to '${nextCalledFunc.queueName}' queue (callArgs are ${
               details.callArgs
             }): ${JSON.stringify(bod)}`
+          );
+          await mqConnection.quit();
+          logger.debug(
+            `closed connection to redis for making child call to ${nextCalledFunc.queueName}`
           );
         };
         // if we know none of the arguments are looped, we can enqueue one job with this static body
@@ -186,15 +195,5 @@ export const createIntegratedWorker = async (
       }
     }
   };
-  logger.debug(`starting worker: '${functionName}'`);
-  range(0, env.WORKER_COUNT).forEach(() => {
-    new Worker<z.TypeOf<typeof calledFunc.schema>>(calledFunc.queueName, func, {
-      connection: mqConnection,
-      concurrency: env.WORKER_CONCURRENCY,
-      limiter: {
-        max: 10,
-        duration: 1000,
-      },
-    });
-  });
+  return func;
 };

@@ -1,8 +1,8 @@
 import { createIntegratedWorker } from "../utils/worker";
 import axios from "axios";
 
-export const checkYTAuthToken = async () => {
-  await createIntegratedWorker(
+export const checkYTAuthToken = () => {
+  return createIntegratedWorker(
     "checkYTAuthToken",
     async ({ reqBody, _calls }) => {
       // We can't get request headers here
