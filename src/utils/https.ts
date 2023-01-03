@@ -1,4 +1,4 @@
-import { GraphQLClient } from "graphql-request"
+import { GraphQLClient } from "graphql-request";
 
 export const makeGraphQlRequest = (
   endpoint: string,
@@ -7,13 +7,13 @@ export const makeGraphQlRequest = (
 ): Promise<Record<string, any> | undefined> => {
   try {
     // https://github.com/prisma-labs/graphql-request
-    const client = new GraphQLClient(endpoint)
+    const client = new GraphQLClient(endpoint);
     return client.request(query, args).then((data) => {
-      if (!data) return undefined
-      if (Array.isArray(data)) return { requestTime: new Date(), data }
-      return { requestTime: new Date(), ...data }
-    })
+      if (!data) return undefined;
+      if (Array.isArray(data)) return { requestTime: new Date(), data };
+      return { requestTime: new Date(), ...data };
+    });
   } catch (e) {
-    return Promise.resolve(undefined)
+    return Promise.resolve(undefined);
   }
-}
+};

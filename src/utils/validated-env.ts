@@ -1,13 +1,17 @@
-import { z } from "zod"
-import { config } from "dotenv"
+import { z } from "zod";
+import { config } from "dotenv";
 
-config({ path: "base.env" })
-config({ path: ".env", override: true })
+config({ path: "base.env" });
+config({ path: ".env", override: true });
 
 // https://github.com/colinhacks/zod/discussions/330#discussioncomment-1625947
-const stringToNumber = () => z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number())
+const stringToNumber = () =>
+  z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number());
 const stringToBool = () =>
-  z.preprocess((a) => (a === "true" || a === "True" ? true : false), z.boolean())
+  z.preprocess(
+    (a) => (a === "true" || a === "True" ? true : false),
+    z.boolean()
+  );
 
 export const ValidatedEnv = z.object({
   API_HOST: z.string().default("http://127.0.0.1"),
@@ -29,6 +33,6 @@ export const ValidatedEnv = z.object({
   MINIO_SECRET_KEY: z.string().default("minio123"),
   UPLOAD_MINIO: stringToBool().default(true),
   UPLOAD_S3: stringToBool().default(false),
-})
-export type ValidatedEnv = z.TypeOf<typeof ValidatedEnv>
-export const validatedEnv = ValidatedEnv.parse(process.env)
+});
+export type ValidatedEnv = z.TypeOf<typeof ValidatedEnv>;
+export const validatedEnv = ValidatedEnv.parse(process.env);

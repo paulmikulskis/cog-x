@@ -6,3 +6,4 @@ erigon.pem
 dump.rdb
 src/*.js
 exampleFunc.json
+.yarn

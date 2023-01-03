@@ -1,6 +1,10 @@
-import { z } from "zod"
-import { createIntegratedFunction, IntegratedFunction, respondWith } from "../utils/server_utils"
-import { getQueue } from "../../workers/utils/queues"
+import { z } from "zod";
+import {
+  createIntegratedFunction,
+  IntegratedFunction,
+  respondWith,
+} from "../utils/server_utils";
+import { getQueue } from "../../workers/utils/queues";
 
 // Every IntegratedFunction (POSTs) will look for a specific structure in the HTTP body.
 // We define that structure with Zod.  If this IntegratedFunction is the interface for
@@ -8,10 +12,10 @@ import { getQueue } from "../../workers/utils/queues"
 // for routing/type-checking/control-flow within the Worker stack:
 export const StoreInfoDumpBody = z.object({
   miles: z.number(),
-})
+});
 
 // we need to convert that 👆 model into a Type so we can grab the Queue functionality
-export type StoreInfoDumpBodyType = z.TypeOf<typeof StoreInfoDumpBody>
+export type StoreInfoDumpBodyType = z.TypeOf<typeof StoreInfoDumpBody>;
 
 // call the createIntegratedFunction() method to bootstrap your API route:
 export const exampleFunc: IntegratedFunction = createIntegratedFunction(
@@ -24,13 +28,20 @@ export const exampleFunc: IntegratedFunction = createIntegratedFunction(
     const dispoDumpQueue = await getQueue<StoreInfoDumpBodyType>(
       context.mqConnection,
       "exampleFunc"
-    )
-    const { miles } = body // we can expect a field 'miles'
+    );
+    const { miles } = body; // we can expect a field 'miles'
     // queue a job in this queue for our new Worker to pick up:
-    const job = await dispoDumpQueue.add(`customId.${miles}`, { reqBody: { miles }, calls: null })
+    const job = await dispoDumpQueue.add(`customId.${miles}`, {
+      reqBody: { miles },
+      calls: null,
+    });
     // since an IntegratedFunction is ultimately a route, make sure to respond HTTP:
-    return respondWith(200, `added job to queue 'exampleFunc' for shops within '${miles}' miles`, {
-      job,
-    })
+    return respondWith(
+      200,
+      `added job to queue 'exampleFunc' for shops within '${miles}' miles`,
+      {
+        job,
+      }
+    );
   }
-)
+);

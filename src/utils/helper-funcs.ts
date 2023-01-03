@@ -1,18 +1,18 @@
-import { TextEncoder } from "util"
+import { TextEncoder } from "util";
 
 export const getSizeInBytes = (obj: any) => {
-  let str = null
+  let str = null;
   if (typeof obj === "string") {
-    str = obj
+    str = obj;
   } else {
-    str = JSON.stringify(obj)
+    str = JSON.stringify(obj);
   }
-  const bytes = new TextEncoder().encode(str).length
-  return bytes
-}
+  const bytes = new TextEncoder().encode(str).length;
+  return bytes;
+};
 
 export const getPrettyDate = () => {
-  const m = new Date()
+  const m = new Date();
   return (
     m.getUTCFullYear() +
     "/" +
@@ -25,5 +25,5 @@ export const getPrettyDate = () => {
     m.getUTCMinutes() +
     ":" +
     m.getUTCSeconds()
-  )
-}
+  );
+};
